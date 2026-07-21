@@ -1,0 +1,55 @@
+:root {
+    --bg-main: #1d1d1d;
+    --bg-dark: #171717;
+    --bg-code: #1e1e1e;
+    --bg-lighter: #222;
+    --bg-light: #333;
+    --bg-highlight: #18b518b0;
+
+    --border-main: #3a3a3a;
+    --border-dark: #333;
+    --border-lighter: #444;
+    --border-light: #555;
+    --border-highlight: #19d919b0;
+
+    --text-main: #fff;
+    --text-seco: #ccc;
+    --text-gray: #a4a4a4;
+    --text-highlight: #19d919;
+    --font: sans-serif;
+
+    --padding-main: 0.5rem;
+    --padding-min: 0.25rem;
+    --padding-large: 1rem;
+
+    --radius-main: 0.5rem;
+    --radius-min: 0.25rem;
+    --radius-large: 1rem;
+}
+
+:root {
+    --topbar-size: 3rem;
+    --default-filemanager-width: 15rem;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font);
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+}
+
+div.main {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+}

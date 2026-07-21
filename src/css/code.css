@@ -1,0 +1,16 @@
+div.codeArea {
+    flex-grow: 1;
+
+    background-color: var(--bg-code);
+    height: calc(100% - 7px);
+
+    min-width: 0;
+
+    user-select: none;
+
+    padding-top: 7px; /* ouch */
+
+    > div {
+        height: 100%
+    }
+}

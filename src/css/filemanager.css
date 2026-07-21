@@ -1,0 +1,102 @@
+div.fileManager {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex-shrink: 0;
+
+    position: relative;
+
+    width: var(--default-filemanager-width);
+
+    background-color: var(--bg-dark);
+    border-right: var(--border-dark) solid 1px;
+}
+
+div.resize {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    height: 100%;
+    width: 5px;
+
+    cursor: ew-resize;
+}
+
+body.fm-drag {
+    cursor: ew-resize;
+    user-select: none;
+}
+
+div.options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: var(--padding-main);
+
+    padding-bottom: var(--padding-min);
+
+    > div {
+        display: flex;
+        gap: var(--padding-min);
+        align-items: center;
+
+        > p, b {
+            margin: 0;
+            user-select: none;
+        }
+
+        > svg {
+            cursor: pointer;
+        }
+    }
+}
+
+div.entry {
+    display: flex;
+    flex-direction: column;
+
+    > div.info {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--padding-min);
+        
+        padding: var(--padding-min) var(--padding-main);
+        cursor: pointer;
+
+        > p {
+            margin: 0;
+            user-select: none;
+        }
+
+        > input {
+            outline: none;
+            background-color: var(--bg-lighter);
+            width: calc(100% - 28px);
+            color: var(--text-main);
+            border-radius: var(--radius-min);
+            border: var(--border-lighter) solid 1px;
+            padding: var(--padding-min);
+        }
+
+        > svg.lucide-file {
+            width: 14px;
+        }
+    }
+
+    > div.info:has(input) {
+        padding: 0 var(--padding-main);
+    }
+}
+
+.collapse {
+    color: var(--text-gray);
+    cursor: pointer;
+}
+
+div.entry.focused {
+    background-color: color-mix(in srgb, var(--bg-highlight) 20%, #fff1);
+}

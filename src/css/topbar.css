@@ -1,0 +1,39 @@
+div.topbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-shrink: 0;
+
+    background-color: var(--bg-lighter);
+    height: var(--topbar-size);
+
+    border-bottom: var(--border-lighter) solid 1px;
+
+    > div {
+        display: flex;
+        flex-direction: row;
+        gap: var(--padding-main);
+        align-items: center;
+
+        padding: 0 var(--padding-large);
+    }
+
+    > div > input {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: var(--font);
+        padding: var(--padding-main);
+
+        outline: none;
+        border: var(--border-main) solid 1px;
+        border-radius: var(--radius-main);
+    }
+}
+
+div.l {
+    justify-content: left;
+}
+
+div.r {
+    justify-content: right;
+}
