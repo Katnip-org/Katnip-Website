@@ -39,7 +39,7 @@
             }
 
             if (CodeEditorState.createEntryType === "file") {
-                ProjectContent.push("")
+                const content = ProjectContent.push("") - 1;
 
                 const path = entry.path === "/" ? "" : entry.path;
 
@@ -47,13 +47,13 @@
                     type: "file",
                     name: CodeEditorState.createEntryName!,
                     path: `${path}/${CodeEditorState.createEntryName}`,
-                    content: ProjectContent.length
+                    content
                 }
 
                 CodeEditorState.focusedEntry = `${path}/${CodeEditorState.createEntryName}`; 
                 CodeEditorState.focusedEntryType = "file";
                 CodeEditorState.currentFile = `${path}/${CodeEditorState.createEntryName}`; 
-                CodeEditorState.currentFileContent = ProjectContent.length;
+                CodeEditorState.currentFileContent = content;
                 CodeEditorState.createEntryName = null;
                 CodeEditorState.createEntryPath = null;
                 CodeEditorState.createEntryType = null;

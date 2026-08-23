@@ -31,7 +31,7 @@
         editor = monaco.editor.create(container, {
             value,
             language: currentLanguage,
-            theme: "vs-dark",
+            theme: "katnip-dark",
             readOnly: false,
             automaticLayout: true
         });
