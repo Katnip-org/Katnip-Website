@@ -15,8 +15,7 @@
     "@types/node": "^24.13.2",
     "svelte": "^5.56.4",
     "svelte-check": "^4.7.1",
-    "typescript": "~6.0.2",
-    "vite": "^8.1.1"
+    "typescript": "~6.0.2"
   },
   "dependencies": {
     "@katnip-org/compiler": "^0.1.8",
