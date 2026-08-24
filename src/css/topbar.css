@@ -28,6 +28,27 @@ div.topbar {
         border: var(--border-main) solid 1px;
         border-radius: var(--radius-main);
     }
+
+    > div > button {
+        display: flex;
+        align-items: center;
+        gap: var(--padding-main);
+
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: var(--font);
+        font-size: 0.9rem;
+        padding: var(--padding-main) var(--padding-large);
+
+        border: var(--border-main) solid 1px;
+        border-radius: var(--radius-main);
+        cursor: pointer;
+    }
+
+    > div > button:hover {
+        border-color: var(--border-highlight);
+        color: var(--text-highlight);
+    }
 }
 
 div.l {

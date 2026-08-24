@@ -1,9 +1,10 @@
 <script lang="ts">
     import ResizeHandle from "../ResizeHandle.svelte";
+    import { StageState } from "../../ts/state.svelte";
     import "../../css/stage.css";
 
     let stage: HTMLDivElement;
-    let scaffolding: any;
+    let scaffolding: any = $state(null);
 
     $effect(() => {
         (async () => {
@@ -15,16 +16,18 @@
             scaffolding.appendTo(stage);
         })();
 
-        // Scaffolding follows window resizes on its own, but not the panel being dragged.
+        // Scaffolding follows window resizes on its own, but not the panel being dragged
         const observer = new ResizeObserver(() => scaffolding?.relayout());
         observer.observe(stage);
         return () => observer.disconnect();
     });
 
-    export async function run(sb3: Uint8Array) {
-        await scaffolding.loadProject(sb3);
-        scaffolding.greenFlag();
-    }
+    $effect(() => {
+        const sb3 = StageState.sb3;
+        if (!sb3 || !scaffolding) return;
+
+        scaffolding.loadProject(sb3).then(() => scaffolding.greenFlag());
+    });
 </script>
 
 <div class="stage" bind:this={stage}>

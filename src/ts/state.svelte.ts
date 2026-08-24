@@ -97,3 +97,5 @@ export function cancelCreate() {
     CodeEditorState.createEntryName = null;
     CodeEditorState.createEntryType = null;
 }
+
+export const StageState: { sb3: Uint8Array | null } = $state({ sb3: null });

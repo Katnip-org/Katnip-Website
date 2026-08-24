@@ -23,3 +23,10 @@ const resolve: ImportResolver = (specifier, fromPath) => {
 export function compile(entry: FilesystemFile) {
     return compileToSb3(ProjectContent[entry.contentIdx], { path: entry.path, resolve });
 }
+
+export function compilePath(path: string) {
+    if (!path.endsWith(".knip")) return null;
+
+    const entry = lookup(path);
+    return entry ? compile(entry) : null;
+}
