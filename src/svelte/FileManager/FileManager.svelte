@@ -1,44 +1,43 @@
 <script lang="ts">
-    import ResizeHandle from "./ResizeHandle.svelte";
+    import ResizeHandle from "../ResizeHandle.svelte";
     import FilePlusCorner from "@lucide/svelte/icons/file-plus-corner";
     import FolderPlus from "@lucide/svelte/icons/folder-plus";
     import "../../css/filemanager.css";
     import { onMount } from "svelte";
-    import { CodeEditorState, Project, ProjectContent } from "../../ts/state.svelte";
+    import { beginCreate, CodeEditorState, Project } from "../../ts/state.svelte";
     import FSEntry from "./FSEntry.svelte";
+    import ContextManager from "./ContextManager.svelte";
 
-    let fm: HTMLDivElement;
+    let fileManager: HTMLDivElement;
     let focused: boolean = $state(false);
 
     onMount(() => {
-        fm.addEventListener("mouseenter", () => {
+        fileManager.addEventListener("mouseenter", () => {
             focused = true;
         });
-        fm.addEventListener("mouseleave", () => {
+        fileManager.addEventListener("mouseleave", () => {
             focused = false;
         })
     });
 
-    function newFile() {
-        let path: string;
+    function newEntry(type: "file" | "directory") {
         if (!CodeEditorState.focusedEntry) {
             CodeEditorState.focusedEntry = "/";
             CodeEditorState.focusedEntryType = "directory";
         }
 
-        if (CodeEditorState.focusedEntryType == "file") {
-            const parts = CodeEditorState.focusedEntry.split("/");
-            path = parts.slice(0, -1).join("/");
-        } else {
-            path = CodeEditorState.focusedEntry
-        }
-        CodeEditorState.createEntryPath = path;
-        CodeEditorState.createEntryName = "";
-        CodeEditorState.createEntryType = "file";
+        // Creating from the toolbar targets whatever is selected: a directory takes it
+        // directly, a file hands off to the directory containing it.
+        const target = CodeEditorState.focusedEntry;
+        const path = CodeEditorState.focusedEntryType === "file"
+            ? target.split("/").slice(0, -1).join("/") || "/"
+            : target;
+
+        beginCreate(type, path);
     }
 </script>
 
-<div class="fileManager" bind:this={fm}>
+<div class="fileManager" bind:this={fileManager}>
     <ResizeHandle />
     <div class="options">
         <div class="l">
@@ -46,11 +45,12 @@
         </div>
         <div class="r">
             {#if focused}
-                <FilePlusCorner class="newFile" size=16 onclick={newFile} />
-                <FolderPlus class="newFolder" size=16 onclick={() => {}} />
+                <FilePlusCorner class="newFile" size=16 onclick={() => newEntry("file")} />
+                <FolderPlus class="newFolder" size=16 onclick={() => newEntry("directory")} />
             {/if}
         </div>
     </div>
+    <ContextManager />
     <div class="files">
         <FSEntry entry={Project.files} nested={0} open />
     </div>

@@ -6,7 +6,7 @@
 
 <div class="topbar">
     <div class="l">
-        <Leaf color="var(--text-highlight)" />
+        <img src="/src/assets/logo.svg" alt="Katnip Logo" width="30" height="30" />
         <p>Katnip</p>
         <input class="projectName" bind:value={Project.name}>
     </div>

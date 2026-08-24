@@ -12,22 +12,6 @@ div.fileManager {
     border-right: var(--border-dark) solid 1px;
 }
 
-div.resize {
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    height: 100%;
-    width: 5px;
-
-    cursor: ew-resize;
-}
-
-body.fm-drag {
-    cursor: ew-resize;
-    user-select: none;
-}
-
 div.options {
     display: flex;
     flex-direction: row;

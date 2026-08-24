@@ -16,7 +16,7 @@ export interface FilesystemFile {
     path: string;
 
     type: "file";
-    content: number;
+    contentIdx: number;
 }
 
 export type FilesystemEntry = FilesystemDirectory | FilesystemFile;
@@ -31,4 +31,14 @@ export interface EditorState {
     createEntryType: "file" | "directory" | null;
     createEntryName: string | null;
     createEntryPath: string | null;
+}
+
+export interface ContextMenuState {
+    x: number;
+    y: number;
+
+    // entry === null means the menu is closed; parent === null means it is the root,
+    // which cannot be deleted.
+    entry: FilesystemEntry | null;
+    parent: FilesystemDirectory | null;
 }

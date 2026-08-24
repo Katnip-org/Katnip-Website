@@ -53,3 +53,23 @@ div.main {
     flex-direction: row;
     flex-grow: 1;
 }
+
+div.resize {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+
+    height: 100%;
+    width: 5px;
+
+    cursor: ew-resize;
+    touch-action: none;
+}
+
+div.resize.right { right: 0; }
+div.resize.left { left: 0; }
+
+body.resizing {
+    cursor: ew-resize;
+    user-select: none;
+}

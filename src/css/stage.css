@@ -1,0 +1,10 @@
+div.stage {
+    position: relative;
+    flex-shrink: 0;
+
+    width: 30%;
+    min-width: 100px;
+
+    background-color: var(--bg-dark);
+    border-left: var(--border-dark) solid 1px;
+}
