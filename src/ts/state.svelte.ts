@@ -99,3 +99,5 @@ export function cancelCreate() {
 }
 
 export const StageState: { sb3: Uint8Array | null } = $state({ sb3: null });
+
+export const TerminalContent: Array<{ text: string; kind: "log" | "warning" | "error" }> = $state([]);

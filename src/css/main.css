@@ -18,6 +18,11 @@
     --text-highlight: #19d919;
     --font: sans-serif;
 
+    --terminal-log: #6272a4;
+    --terminal-warning: #f1fa8c;
+    --terminal-error: #f55;
+    --terminal-info: #2196F3;
+
     --padding-main: 0.5rem;
     --padding-min: 0.25rem;
     --padding-large: 1rem;
@@ -39,6 +44,9 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     font-family: var(--font);
+
+    scrollbar-color: var(--border-light) transparent;
+    scrollbar-width: thin;
 }
 
 #root {
@@ -52,6 +60,19 @@ div.main {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
+    min-height: 0;
+}
+
+div.output {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    width: 30%;
+    min-width: 100px;
+
+    border-left: var(--border-dark) solid 1px;
 }
 
 div.resize {

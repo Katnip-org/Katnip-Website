@@ -1,5 +1,4 @@
 <script lang="ts">
-    import ResizeHandle from "../ResizeHandle.svelte";
     import { StageState } from "../../ts/state.svelte";
     import "../../css/stage.css";
 
@@ -30,6 +29,4 @@
     });
 </script>
 
-<div class="stage" bind:this={stage}>
-    <ResizeHandle edge="left" />
-</div>
+<div class="stage" bind:this={stage}></div>

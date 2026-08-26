@@ -4,6 +4,8 @@
     import FileManager from "./FileManager/FileManager.svelte";
     import Stage from "./Stage/Stage.svelte";
     import Topbar from "./Topbar/Topbar.svelte";
+    import Terminal from "./Terminal/Terminal.svelte";
+    import ResizeHandle from "./ResizeHandle.svelte";
 
     import "../css/main.css";
 
@@ -16,5 +18,9 @@
 <div class="main">
     <FileManager />
     <Code />
-    <Stage />
+    <div class="output">
+        <ResizeHandle edge="left" />
+        <Stage />
+        <Terminal />
+    </div>
 </div>
