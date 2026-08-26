@@ -1,5 +1,6 @@
 <script lang="ts">
     import Play from "@lucide/svelte/icons/play"
+    import logo from "../../assets/logo.svg";
     import "../../css/topbar.css";
     import { CodeEditorState, Project, StageState } from "../../ts/state.svelte";
     import { compilePath } from "../../ts/compile";
@@ -37,7 +38,7 @@
 
 <div class="topbar">
     <div class="l">
-        <img src="/src/assets/logo.svg" alt="Katnip Logo" width="30" height="30" />
+        <img src={logo} alt="Katnip Logo" width="30" height="30" />
         <p>Katnip</p>
         <input class="projectName" bind:value={Project.name}>
     </div>
