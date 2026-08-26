@@ -22,11 +22,14 @@
         let timeString: string = prettifyDate(new Date());
         TerminalContent.push({ text: `-- Compile started at ${timeString} --`, kind: "log" });
         for (const e of result.errors) {
-            TerminalContent.push({ text: `${e.source}: ${e.message}`, kind: e.severity });
+            e.location
+            TerminalContent.push({ 
+                text: `${e.source}${e.location && ` [ln ${e.location.line}, col ${e.location.column}]`}: ${e.message}`, 
+                kind: e.severity 
+            });
         }
         timeString = prettifyDate(new Date());
         TerminalContent.push({ text: `-- Compile ended at ${timeString} --`, kind: "log" });
-        TerminalContent.push({ text: `---`, kind: "log" });
 
         if (result.sb3) StageState.sb3 = result.sb3;
     }

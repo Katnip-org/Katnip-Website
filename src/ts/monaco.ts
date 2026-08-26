@@ -7,6 +7,9 @@ import TsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
 import { checkSource, type KatnipError } from "@katnip-org/compiler";
 import * as monaco from "monaco-editor";
 
+// @ts-ignore
+import { conf as iniConf, language as iniLanguage } from "monaco-editor/esm/vs/basic-languages/ini/ini.js";
+
 import { loadWASM, OnigScanner, OnigString } from 'vscode-oniguruma';
 import { Registry, INITIAL, parseRawGrammar, type StateStack } from 'vscode-textmate';
 import onigWasmUrl from 'vscode-oniguruma/release/onig.wasm?url';
@@ -29,21 +32,21 @@ self.MonacoEnvironment = {
 };
 
 export function UpdateDiagnostics(m: monaco.editor.ITextModel) {
-    const version = m.getVersionId();
-    const errs = checkCode(m.getValue());
+	const version = m.getVersionId();
+	const errs = checkCode(m.getValue());
 
-    if (m.getVersionId() !== version) return;
+	if (m.getVersionId() !== version) return;
 
-    monaco.editor.setModelMarkers(m, "katnip", errs.map(e => {
-        return {
-            severity: 8,
-            message: e.message,
-            startColumn: e.location.column, 
-            startLineNumber: e.location.line, 
-            endColumn: e.location.endColumn ?? e.location.column, 
-            endLineNumber: e.location.endLine ?? e.location.line
-        };
-    }));
+	monaco.editor.setModelMarkers(m, "katnip", errs.map(e => {
+		return {
+			severity: 8,
+			message: e.message,
+			startColumn: e.location?.column ?? -1, 
+			startLineNumber: e.location?.line ?? -1, 
+			endColumn: e.location?.endColumn ?? e.location?.column ?? -1, 
+			endLineNumber: e.location?.endLine ?? e.location?.line ?? -1
+		};
+	}));
 }
 
 function checkCode(code: string) {
@@ -103,6 +106,10 @@ monaco.editor.defineTheme("katnip-dark", {
 		{ token: "punctuation.section.interpolation", foreground: "569CD6" }
 	]
 });
+
+monaco.languages.register({ id: "toml", extensions: [".toml"] });
+monaco.languages.setLanguageConfiguration("toml", iniConf as monaco.languages.LanguageConfiguration);
+monaco.languages.setMonarchTokensProvider("toml", iniLanguage as monaco.languages.IMonarchLanguage);
 
 let languagePromise: Promise<void> | null = null;
 
