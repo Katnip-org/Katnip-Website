@@ -2,7 +2,7 @@
     import { onDestroy, onMount } from "svelte";
     import "../../ts/monaco";
     import * as monaco from "monaco-editor";
-    import { registerKatnipLanguage, UpdateDiagnostics } from "../../ts/monaco";
+    import { registerLanguages, UpdateDiagnostics } from "../../ts/monaco";
 
     let { value = $bindable(""), filename, onChange }: { value: string, filename: string, onChange: (v: string) => void } = $props();
 
@@ -24,7 +24,7 @@
     }
 
     onMount(async() => {
-        await registerKatnipLanguage();
+        await registerLanguages();
 
         currentLanguage = getLanguage(filename);
 

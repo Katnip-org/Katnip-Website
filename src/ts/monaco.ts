@@ -7,13 +7,67 @@ import TsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
 import { checkSource, type KatnipError } from "@katnip-org/compiler";
 import * as monaco from "monaco-editor";
 
-// @ts-ignore
-import { conf as iniConf, language as iniLanguage } from "monaco-editor/esm/vs/basic-languages/ini/ini.js";
+import { THEME_RULES, themeScope } from "./theme";
 
 import { loadWASM, OnigScanner, OnigString } from 'vscode-oniguruma';
 import { Registry, INITIAL, parseRawGrammar, type StateStack } from 'vscode-textmate';
 import onigWasmUrl from 'vscode-oniguruma/release/onig.wasm?url';
-import grammarUrl from '../language/katnip.tmLanguage.json?url';
+import katnipGrammarUrl from '../language/katnip.tmLanguage.json?url';
+import tomlGrammarUrl from '../language/toml.tmLanguage.json?url';
+
+const GRAMMARS: Record<string, string> = {
+	"source.katnip": katnipGrammarUrl,
+	"source.toml": tomlGrammarUrl
+};
+
+const LANGUAGES: {
+    id: string;
+    scopeName: string;
+    extensions: string[];
+    configuration?: monaco.languages.LanguageConfiguration;
+}[] = [
+    {
+        id: "katnip",
+        scopeName: "source.katnip",
+        extensions: [".knip"],
+        configuration: {
+            comments: { lineComment: "#" },
+            brackets: [
+                ["{", "}"],
+                ["[", "]"],
+                ["(", ")"],
+            ],
+            autoClosingPairs: [
+                { open: "{", close: "}" },
+                { open: "[", close: "]" },
+                { open: "(", close: ")" },
+                { open: '"', close: '"' },
+                { open: "'", close: "'" },
+                { open: "#>", close: "<#" },
+                { open: "#<", close: ">#" },
+                { open: "#[", close: "]#" },
+            ],
+        },
+    },
+    {
+        id: "toml",
+        scopeName: "source.toml",
+        extensions: [".toml"],
+        configuration: {
+            comments: { lineComment: "#" },
+            brackets: [
+                ["{", "}"],
+                ["[", "]"],
+            ],
+            autoClosingPairs: [
+                { open: "{", close: "}" },
+                { open: "[", close: "]" },
+                { open: '"', close: '"' },
+                { open: "'", close: "'" },
+            ],
+        },
+    },
+];
 
 declare global {
 	interface Window {
@@ -68,9 +122,10 @@ export function getRegistry(): Promise<Registry> {
           createOnigString: (s) => new OnigString(s)
         }),
         loadGrammar: async (scopeName) => {
-          if (scopeName !== 'source.katnip') return null;
-          const content = await (await fetch(grammarUrl)).text();
-          return parseRawGrammar(content, 'katnip.tmLanguage.json');
+          const url = GRAMMARS[scopeName];
+          if (!url) return null;
+          const content = await (await fetch(url)).text();
+          return parseRawGrammar(content, `${scopeName}.json`);
         }
       });
     })();
@@ -78,64 +133,42 @@ export function getRegistry(): Promise<Registry> {
   return registryPromise;
 }
 
-/**
- * Monaco's built-in themes only name Monarch tokens (keyword, string, type...)
- * This theme bridges the TextMate terms the Katnip grammar uses.
- * These are the VS Code Dark+ colors.
- */
 monaco.editor.defineTheme("katnip-dark", {
 	base: "vs-dark",
 	inherit: true,
 	colors: {},
-	rules: [
-		{ token: "comment", foreground: "6A9955" },
-		{ token: "string", foreground: "CE9178" },
-		{ token: "constant.character.escape", foreground: "D7BA7D" },
-		{ token: "constant.numeric", foreground: "B5CEA8" },
-		{ token: "constant.language", foreground: "569CD6" },
-		{ token: "constant.other.enum", foreground: "4FC1FF" },
-		{ token: "keyword.control", foreground: "C586C0" },
-		{ token: "keyword.operator", foreground: "D4D4D4" },
-		{ token: "storage.type", foreground: "569CD6" },
-		{ token: "storage.modifier", foreground: "569CD6" },
-		{ token: "entity.name.function", foreground: "DCDCAA" },
-		{ token: "entity.name.type", foreground: "4EC9B0" },
-		{ token: "support.type", foreground: "4EC9B0" },
-		{ token: "variable.other", foreground: "9CDCFE" },
-		{ token: "variable.language", foreground: "569CD6" },
-		{ token: "punctuation.section.interpolation", foreground: "569CD6" }
-	]
+	rules: THEME_RULES
 });
-
-monaco.languages.register({ id: "toml", extensions: [".toml"] });
-monaco.languages.setLanguageConfiguration("toml", iniConf as monaco.languages.LanguageConfiguration);
-monaco.languages.setMonarchTokensProvider("toml", iniLanguage as monaco.languages.IMonarchLanguage);
 
 let languagePromise: Promise<void> | null = null;
 
-export function registerKatnipLanguage(): Promise<void> {
-	if (!languagePromise) languagePromise = doRegisterKatnipLanguage();
+export function registerLanguages(): Promise<void> {
+	if (!languagePromise) languagePromise = doRegisterLanguages();
 	return languagePromise;
 }
 
-async function doRegisterKatnipLanguage() {
-	monaco.languages.register({ id: "katnip", extensions: [".knip"] });
-
+async function doRegisterLanguages() {
 	const registry = await getRegistry();
-	const grammar = await registry.loadGrammar("source.katnip");
-	if (!grammar) throw new Error("Failed to load Katnip grammar");
 
-	monaco.languages.setTokensProvider("katnip", {
-		getInitialState: () => INITIAL,
-		tokenize: (line, state) => {
-			const result = grammar.tokenizeLine(line, state as StateStack);
-			return {
-				tokens: result.tokens.map((t) => ({
-					startIndex: t.startIndex,
-					scopes: t.scopes[t.scopes.length - 1]
-				})),
-				endState: result.ruleStack
-			};
-		}
-	});
+	await Promise.all(LANGUAGES.map(async ({ id, scopeName, extensions, configuration }) => {
+		monaco.languages.register({ id, extensions });
+		if (configuration) monaco.languages.setLanguageConfiguration(id, configuration);
+
+		const grammar = await registry.loadGrammar(scopeName);
+		if (!grammar) throw new Error(`Failed to load grammar ${scopeName}`);
+
+		monaco.languages.setTokensProvider(id, {
+			getInitialState: () => INITIAL,
+			tokenize: (line, state) => {
+				const result = grammar.tokenizeLine(line, state as StateStack);
+				return {
+					tokens: result.tokens.map((t) => ({
+						startIndex: t.startIndex,
+						scopes: themeScope(t.scopes)
+					})),
+					endState: result.ruleStack
+				};
+			}
+		});
+	}));
 }

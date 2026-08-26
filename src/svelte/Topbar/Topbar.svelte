@@ -23,8 +23,8 @@
         TerminalContent.push({ text: `-- Compile started at ${timeString} --`, kind: "log" });
         for (const e of result.errors) {
             e.location
-            TerminalContent.push({ 
-                text: `${e.source}${e.location && ` [ln ${e.location.line}, col ${e.location.column}]`}: ${e.message}`, 
+            TerminalContent.push({
+                text: `${e.source}${e.location ? ` [ln ${e.location.line}, col ${e.location.column}]` : ""}: ${e.message}`, 
                 kind: e.severity 
             });
         }

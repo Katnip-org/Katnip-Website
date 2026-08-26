@@ -1,7 +1,7 @@
 import type { ProjectConfig, EditorState, ContextMenuState, FilesystemEntry, FilesystemDirectory } from "./types";
 
 export const Project: ProjectConfig = $state({
-    name: "My Project", 
+    name: "My Project",
     files: {
         type: "directory",
         name: "/",
@@ -11,22 +11,28 @@ export const Project: ProjectConfig = $state({
                 type: "file",
                 name: "hello.md",
                 path: "/hello.md",
-                contentIdx: 0
+                contentIdx: 0,
             },
             "thing.json": {
                 type: "file",
                 name: "thing.json",
                 path: "/thing.json",
-                contentIdx: 1
+                contentIdx: 1,
             },
             "test.knip": {
                 type: "file",
                 name: "test.knip",
                 path: "/test.knip",
-                contentIdx: 2
+                contentIdx: 2,
             },
-        }
-    }
+            "settings.toml": {
+                type: "file",
+                name: "settings.toml",
+                path: "/settings.toml",
+                contentIdx: 3,
+            },
+        },
+    },
 });
 
 export const ProjectContent: Array<string> = $state([]);
@@ -57,6 +63,19 @@ sprite Cat {
         looks.say(f"Scored {score}!", 2);
     }
 }
+`;
+ProjectContent[3] = `# Katnip compilation settings
+
+# --- Web-Editor Options ---
+
+# Decide how the web editor submits your project for compilation
+# "open-editor" -> Send my current file and any imported files
+# "main" -> Search for a file named "main.knip", fallback to "open-editor"
+compilation = "open-editor" # enum: (open-editor, main)
+
+
+# --- Compiler Options ---
+
 `;
 
 export const CodeEditorState: EditorState = $state({

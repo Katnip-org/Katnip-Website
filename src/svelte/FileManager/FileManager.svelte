@@ -26,8 +26,6 @@
             CodeEditorState.focusedEntryType = "directory";
         }
 
-        // Creating from the toolbar targets whatever is selected: a directory takes it
-        // directly, a file hands off to the directory containing it.
         const target = CodeEditorState.focusedEntry;
         const path = CodeEditorState.focusedEntryType === "file"
             ? target.split("/").slice(0, -1).join("/") || "/"
