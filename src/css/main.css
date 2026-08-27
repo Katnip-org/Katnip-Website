@@ -35,6 +35,7 @@
 :root {
     --topbar-size: 3rem;
     --default-filemanager-width: 15rem;
+    --stagecontrolbar-size: 2rem;
 }
 
 body {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Play from "@lucide/svelte/icons/play"
+    import Play from "@lucide/svelte/icons/play";
     import logo from "../../assets/logo.svg";
     import "../../css/topbar.css";
     import { CodeEditorState, Project, StageState } from "../../ts/state.svelte";
@@ -15,7 +15,7 @@
         });
     }
 
-    function run() {
+    function compile() {
         const path = CodeEditorState.currentFile;
         const result = path === null ? null : compilePath(path);
         if (!result) return;
@@ -42,10 +42,10 @@
         <p>Katnip</p>
         <input class="projectName" bind:value={Project.name}>
     </div>
-    <div class="r">
-        <button onclick={run} title="Run">
+    <div class="compile">
+        <button onclick={compile} title="Compile">
             <Play size=16/>
-            Run
+            Compile
         </button>
     </div>
 </div>

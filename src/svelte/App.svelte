@@ -8,6 +8,7 @@
     import ResizeHandle from "./ResizeHandle.svelte";
 
     import "../css/main.css";
+    import StageControlBar from "./StageControlBar/StageControlBar.svelte";
 
     $effect(() => {
         document.title = Project.name ? `${Project.name} - Katnip Editor` : "Katnip Editor";
@@ -20,6 +21,7 @@
     <Code />
     <div class="output">
         <ResizeHandle edge="left" />
+        <StageControlBar />
         <Stage />
         <Terminal />
     </div>

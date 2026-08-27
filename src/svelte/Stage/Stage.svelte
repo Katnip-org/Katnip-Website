@@ -3,26 +3,35 @@
     import "../../css/stage.css";
 
     let stage: HTMLDivElement;
-    let scaffolding: any = $state(null);
 
     $effect(() => {
+        let cancelled = false;
+
         (async () => {
-            // @ts-ignore: no types for @turbowarp/scaffolding
-            const mod: any = await import("@turbowarp/scaffolding");
-            scaffolding = new (mod.Scaffolding ?? mod.default.Scaffolding)();
+            const mod = await import("@turbowarp/scaffolding");
+            if (cancelled) return;
+
+            const scaffolding = new (mod.Scaffolding ?? mod.default.Scaffolding)();
             scaffolding.resizeMode = "preserve-ratio";
             scaffolding.setup();
             scaffolding.appendTo(stage);
+            StageState.scaffolding = scaffolding;
         })();
 
         // Scaffolding follows window resizes on its own, but not the panel being dragged
-        const observer = new ResizeObserver(() => scaffolding?.relayout());
+        const observer = new ResizeObserver(() => StageState.scaffolding?.relayout());
         observer.observe(stage);
-        return () => observer.disconnect();
+
+        return () => {
+            cancelled = true;
+            observer.disconnect();
+            StageState.scaffolding = null;
+        };
     });
 
     $effect(() => {
         const sb3 = StageState.sb3;
+        const scaffolding = StageState.scaffolding;
         if (!sb3 || !scaffolding) return;
 
         scaffolding.loadProject(sb3).then(() => scaffolding.greenFlag());

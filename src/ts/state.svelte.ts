@@ -1,3 +1,4 @@
+import type { Scaffolding } from "@turbowarp/scaffolding";
 import type { ProjectConfig, EditorState, ContextMenuState, FilesystemEntry, FilesystemDirectory } from "./types";
 
 export const Project: ProjectConfig = $state({
@@ -117,6 +118,6 @@ export function cancelCreate() {
     CodeEditorState.createEntryType = null;
 }
 
-export const StageState: { sb3: Uint8Array | null } = $state({ sb3: null });
+export const StageState: { sb3: Uint8Array | null; scaffolding: Scaffolding | null } = $state({ sb3: null, scaffolding: null });
 
 export const TerminalContent: Array<{ text: string; kind: "log" | "warning" | "error" }> = $state([]);

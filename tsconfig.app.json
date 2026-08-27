@@ -15,7 +15,9 @@
      */
     "allowJs": true,
     "checkJs": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    // the package's own types.d.ts is a stub with a broken reference path
+    "paths": { "@turbowarp/scaffolding": ["./src/ts/scaffolding.d.ts"] }
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte", "src/css/stagecontrolbar.css"]
 }

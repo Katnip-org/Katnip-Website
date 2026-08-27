@@ -1,0 +1,34 @@
+div.stagecontrolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    gap: var(--padding-min);
+
+    box-sizing: border-box;
+    height: var(--stagecontrolbar-size);
+    padding: var(--padding-min);
+
+    background-color: var(--bg-lighter);
+
+    > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
+        aspect-ratio: 1;
+        padding: 0;
+
+        background-color: transparent;
+        color: var(--text-main);
+
+        border: none;
+        border-radius: var(--radius-min);
+        cursor: pointer;
+    }
+
+    > button:hover {
+        background-color: var(--bg-light);
+    }
+}
