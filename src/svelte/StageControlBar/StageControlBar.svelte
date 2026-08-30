@@ -4,20 +4,28 @@
     import Pause from "@lucide/svelte/icons/pause";
     import Play from "@lucide/svelte/icons/play";
     import { StageState } from "../../ts/state.svelte";
+    import { compile } from "../../ts/actions.svelte"
     import "../../css/stagecontrolbar.css";
 
     let paused = $state(false);
 
     function start() {
+        if (!StageState.hasCompiled) {
+            StageState.hasCompiled = true;
+            alert("No compiled code found... \nCompiling for you... \nPlease run 'compile' next time.")
+            compile();
+        }
+
         StageState.scaffolding?.greenFlag();
         paused = false;
     }
 
+    // NOTE: I was told that this is okay, but has some issues since it resets interval + emmits two events
     function pause() {
         const vm = StageState.scaffolding?.vm;
         if (!vm) return;
 
-        if (vm.runtime.frameLoop.running) vm.stop();
+        if (vm.runtime.frameLoop.running) vm.quit();
         else vm.start();
         paused = !vm.runtime.frameLoop.running;
     }

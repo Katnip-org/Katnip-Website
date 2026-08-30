@@ -118,6 +118,10 @@ export function cancelCreate() {
     CodeEditorState.createEntryType = null;
 }
 
-export const StageState: { sb3: Uint8Array | null; scaffolding: Scaffolding | null } = $state({ sb3: null, scaffolding: null });
+export const StageState: {
+    sb3: Uint8Array | null;
+    scaffolding: Scaffolding | null;
+    hasCompiled: boolean;
+} = $state({ sb3: null, scaffolding: null, hasCompiled: false });
 
 export const TerminalContent: Array<{ text: string; kind: "log" | "warning" | "error" }> = $state([]);

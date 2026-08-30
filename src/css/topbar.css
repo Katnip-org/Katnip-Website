@@ -29,7 +29,7 @@ div.topbar {
         border-radius: var(--radius-main);
     }
 
-    > div > button {
+    > div > button, a {
         display: flex;
         align-items: center;
         gap: var(--padding-main);
@@ -45,7 +45,7 @@ div.topbar {
         cursor: pointer;
     }
 
-    > div > button:hover {
+    > div > button:hover, a:hover {
         border-color: var(--border-highlight);
         color: var(--text-highlight);
     }
