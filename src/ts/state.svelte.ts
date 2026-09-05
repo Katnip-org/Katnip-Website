@@ -1,5 +1,5 @@
 import type { Scaffolding } from "@turbowarp/scaffolding";
-import type { ProjectConfig, EditorState, ContextMenuState, FilesystemEntry, FilesystemDirectory } from "./types";
+import type { ProjectConfig, EditorState, ContextMenuState, FilesystemEntry, FilesystemDirectory, TerminalLine } from "./types";
 
 export const Project: ProjectConfig = $state({
     name: "My Project",
@@ -104,7 +104,8 @@ export const CodeEditorState: EditorState = $state({
     createEntryType: null,
     createEntryPath: null,
     renameEntryPath: null,
-    renameEntryName: null
+    renameEntryName: null,
+    reveal: null
 });
 
 export const ContextMenu: ContextMenuState = $state({
@@ -212,7 +213,17 @@ export function cancelCreate() {
 export const StageState: {
     sb3: Uint8Array | null;
     scaffolding: Scaffolding | null;
-    hasCompiled: boolean;
-} = $state({ sb3: null, scaffolding: null, hasCompiled: false });
+} = $state({ sb3: null, scaffolding: null });
 
-export const TerminalContent: Array<{ text: string; kind: "log" | "warning" | "error" }> = $state([]);
+export const TerminalContent: TerminalLine[] = $state([]);
+
+/** Opens the file at `path` in the editor and jumps to `line`/`column`. */
+export function openAt(path: string, line: number, column: number) {
+    const found = findEntry(path);
+    if (found?.entry.type !== "file") return;
+    CodeEditorState.currentFile = path;
+    CodeEditorState.currentFileContent = found.entry.contentIdx;
+    CodeEditorState.focusedEntry = path;
+    CodeEditorState.focusedEntryType = "file";
+    CodeEditorState.reveal = { line, column };
+}

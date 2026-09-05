@@ -37,6 +37,15 @@ export interface EditorState {
 
     renameEntryPath: string | null;
     renameEntryName: string | null;
+
+    /** Set to jump the editor to a position; the editor clears it once applied. */
+    reveal: { line: number; column: number } | null;
+}
+
+export interface TerminalLine {
+    text: string;
+    kind: "log" | "warning" | "error";
+    location?: { path: string; line: number; column: number };
 }
 
 export interface ContextMenuState {

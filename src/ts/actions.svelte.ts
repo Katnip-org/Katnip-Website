@@ -14,16 +14,18 @@ function prettifyDate(date: Date): string {
 
 export function compile() {
     const path = CodeEditorState.currentFile;
-    const result = path === null ? null : compilePath(path);
+    if (path === null) return;
+
+    const result = compilePath(path);
     if (!result) return;
 
     let timeString: string = prettifyDate(new Date());
     TerminalContent.push({ text: `-- Compile started at ${timeString} --`, kind: "log" });
     for (const e of result.errors) {
-        e.location;
         TerminalContent.push({
-            text: `${e.source}${e.location ? ` [ln ${e.location.line}, col ${e.location.column}]` : ""}: ${e.message}`,
+            text: `${e.source}: ${e.message}`,
             kind: e.severity,
+            location: e.location && { path, line: e.location.line, column: e.location.column },
         });
     }
     timeString = prettifyDate(new Date());

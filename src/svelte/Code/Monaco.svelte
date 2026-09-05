@@ -3,6 +3,7 @@
     import "../../ts/monaco";
     import * as monaco from "monaco-editor";
     import { registerLanguages, UpdateDiagnostics } from "../../ts/monaco";
+    import { CodeEditorState } from "../../ts/state.svelte";
 
     let { value = $bindable(""), filename, onChange }: { value: string, filename: string, onChange: (v: string) => void } = $props();
 
@@ -42,7 +43,17 @@
             onChange(editor.getValue());
             if (currentLanguage === "katnip") UpdateDiagnostics(mod, filename);
         });
+        reveal();
     });
+
+    function reveal() {
+        const r = CodeEditorState.reveal;
+        if (!editor || !r) return;
+        editor.setPosition({ lineNumber: r.line, column: r.column });
+        editor.revealLineInCenter(r.line);
+        editor.focus();
+        CodeEditorState.reveal = null;
+    }
 
     $effect(() => {
         const f = filename;
@@ -61,6 +72,9 @@
             editor.setValue(value);
         }
     });
+
+    // Runs after the value effect above, so the file is loaded before we jump.
+    $effect(reveal);
 
     onDestroy(() => editor.dispose())
 </script>

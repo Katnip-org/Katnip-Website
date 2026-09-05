@@ -10,8 +10,7 @@
     let paused = $state(false);
 
     function start() {
-        if (!StageState.hasCompiled) {
-            StageState.hasCompiled = true;
+        if (!StageState.sb3) {
             alert("No compiled code found... \nCompiling for you... \nPlease run 'compile' next time.")
             compile();
         }

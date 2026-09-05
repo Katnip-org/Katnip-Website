@@ -2,14 +2,38 @@ div.terminal {
     flex-grow: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: var(--padding-main);
+    padding: var(--padding-min) 0;
     background-color: var(--bg-dark);
     border-top: 1px solid var(--border-dark);
     font-family: monospace;
-}
+    font-size: 0.85rem;
 
-div.terminal {
-    > .log { color: var(--terminal-log); }
-    > .warning { color: var(--terminal-warning); }
-    > .error { color: var(--terminal-error); }
+    > div {
+        display: flex;
+        gap: var(--padding-main);
+        padding: 2px var(--padding-main);
+        border-left: 3px solid transparent;
+
+        > span {
+            flex-grow: 1;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        > a {
+            flex-shrink: 0;
+            color: var(--terminal-info);
+            opacity: 0.8;
+            text-decoration: none;
+        }
+
+        > a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+    }
+
+    > .log { color: var(--terminal-log); font-style: italic; }
+    > .warning { color: var(--terminal-warning); border-left-color: var(--terminal-warning); background: color-mix(in srgb, var(--terminal-warning) 6%, transparent); }
+    > .error { color: var(--terminal-error); border-left-color: var(--terminal-error); background: color-mix(in srgb, var(--terminal-error) 6%, transparent); }
 }
