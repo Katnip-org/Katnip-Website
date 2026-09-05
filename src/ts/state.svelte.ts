@@ -98,8 +98,10 @@ compilation = "open-editor" # enum: (open-editor, main)
 `;
 
 export const CodeEditorState: EditorState = $state({
-    currentFile: null,
-    currentFileContent: null,
+    currentFile: "/test.knip",
+    currentFileContent: 2,
+    focusedEntry: "/test.knip",
+    focusedEntryType: "file",
     createEntryName: null,
     createEntryType: null,
     createEntryPath: null,
