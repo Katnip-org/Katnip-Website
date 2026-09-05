@@ -92,3 +92,8 @@ div.entry {
 div.entry.focused {
     background-color: color-mix(in srgb, var(--bg-highlight) 20%, #fff1);
 }
+
+div.entry.dropTarget > div.info {
+    outline: 1px solid var(--bg-highlight);
+    outline-offset: -1px;
+}

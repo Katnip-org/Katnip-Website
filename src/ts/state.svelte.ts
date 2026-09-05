@@ -38,10 +38,14 @@ export const Project: ProjectConfig = $state({
 
 export const ProjectContent: Array<string | Uint8Array> = $state([]);
 
-/** Adds or replaces a file at the FS root. Bytes that are valid UTF-8 are stored as text. */
+/** Bytes that are valid UTF-8 become text; anything else stays binary. */
+export function bytesToContent(bytes: Uint8Array): string | Uint8Array {
+    try { return new TextDecoder("utf-8", { fatal: true }).decode(bytes); } catch { return bytes; }
+}
+
+/** Adds or replaces a file at the FS root. */
 export function uploadFile(name: string, bytes: Uint8Array) {
-    let content: string | Uint8Array = bytes;
-    try { content = new TextDecoder("utf-8", { fatal: true }).decode(bytes); } catch {}
+    const content = bytesToContent(bytes);
 
     const existing = Project.files.files[name];
     if (existing?.type === "file") {
@@ -162,10 +166,41 @@ export function renameEntry(entry: FilesystemEntry, parent: FilesystemDirectory,
     entry.name = name;
     repath(entry, path);
 
+    fixOpenPaths(oldPath, path);
+}
+
+function fixOpenPaths(oldPath: string, path: string) {
     const moved = (p: string | null | undefined) =>
         p === oldPath ? path : p?.startsWith(`${oldPath}/`) ? path + p.slice(oldPath.length) : p;
     CodeEditorState.currentFile = moved(CodeEditorState.currentFile) ?? null;
     CodeEditorState.focusedEntry = moved(CodeEditorState.focusedEntry) ?? undefined;
+}
+
+/** Finds an entry and its parent by path. */
+export function findEntry(path: string): { entry: FilesystemEntry; parent: FilesystemDirectory | null } | null {
+    let parent: FilesystemDirectory | null = null;
+    let entry: FilesystemEntry = Project.files;
+    for (const seg of path.split("/").filter(Boolean)) {
+        if (entry.type !== "directory" || !entry.files[seg]) return null;
+        parent = entry;
+        entry = entry.files[seg];
+    }
+    return { entry, parent };
+}
+
+/** Moves the entry at `srcPath` into the directory `dest`. No-op if invalid, same parent, into itself, or name taken. */
+export function moveEntry(srcPath: string, dest: FilesystemDirectory) {
+    const found = findEntry(srcPath);
+    if (!found?.parent) return;
+    const { entry, parent } = found;
+    if (parent === dest || dest.path === srcPath || dest.path.startsWith(`${srcPath}/`)) return;
+    if (dest.files[entry.name]) return;
+
+    delete parent.files[entry.name];
+    dest.files[entry.name] = entry;
+    const base = dest.path === "/" ? "" : dest.path;
+    repath(entry, `${base}/${entry.name}`);
+    fixOpenPaths(srcPath, entry.path);
 }
 
 export function cancelCreate() {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { cancelCreate, cancelRename, CodeEditorState, openContextMenu, ProjectContent, renameEntry } from "../../ts/state.svelte";
+    import { cancelCreate, cancelRename, CodeEditorState, moveEntry, openContextMenu, ProjectContent, renameEntry } from "../../ts/state.svelte";
     import { COSTUME_FORMATS, SOUND_FORMATS, type FilesystemDirectory, type FilesystemEntry } from "../../ts/types";
     import FSEntry from "./FSEntry.svelte";
     import ChevronDown from "@lucide/svelte/icons/chevron-down";
@@ -12,6 +12,8 @@
     let { entry, parent, open = false, nested }: { entry: FilesystemEntry, parent?: FilesystemDirectory, open?: boolean, nested: number } = $props();
 
     let self: HTMLDivElement;
+    let dropTarget = $state(false);
+    const dropDir = $derived(entry.type === "directory" ? entry : parent);
 
     const ext = $derived(entry.name.split(".").pop()?.toLowerCase() ?? "");
     const Icon = $derived(
@@ -79,6 +81,28 @@
         cancelRename();
     }
 
+    function dragStart(ev: DragEvent) {
+        ev.stopPropagation();
+        ev.dataTransfer?.setData("text/plain", entry.path);
+    }
+
+    function dragOver(ev: DragEvent) {
+        if (!dropDir || !ev.dataTransfer?.types.includes("text/plain")) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        dropTarget = true;
+    }
+
+    function drop(ev: DragEvent) {
+        dropTarget = false;
+        const src = ev.dataTransfer?.getData("text/plain");
+        if (!dropDir || !src) return;
+        ev.preventDefault();
+        ev.stopPropagation();
+        moveEntry(src, dropDir);
+        if (entry.type === "directory") open = true;
+    }
+
     function contextMenu(ev: MouseEvent) {
         ev.preventDefault();
         // Keep this from reaching the window handler that closes the menu.
@@ -88,8 +112,10 @@
 
 </script>
 
-<div class={"entry" + (CodeEditorState.focusedEntry === entry.path && entry.path !== "/" ? " focused" : "")}>
-    <div class="info" bind:this={self} oncontextmenu={contextMenu} role="presentation" style={`margin-left: ${nested * 4}px`}>
+<div class={"entry" + (CodeEditorState.focusedEntry === entry.path && entry.path !== "/" ? " focused" : "") + (dropTarget ? " dropTarget" : "")}>
+    <div class="info" bind:this={self} oncontextmenu={contextMenu} role="presentation" style={`margin-left: ${nested * 4}px`}
+        draggable={entry.path !== "/"} ondragstart={dragStart}
+        ondragover={dragOver} ondragleave={() => dropTarget = false} ondrop={drop}>
         {#if entry.type === "file"}
             <Icon size={14} color="var(--text-gray)" />
         {/if}
@@ -123,7 +149,12 @@
                         {:else}
                             <ChevronRight size={12} class="collapse" />
                         {/if}
-                        <input bind:value={CodeEditorState.createEntryName} onkeydown={tempInputKeyEv}>
+                        <input
+                            bind:value={CodeEditorState.createEntryName}
+                            onkeydown={tempInputKeyEv}
+                            onblur={cancelCreate}
+                            {@attach (el) => el.focus()}
+                        >
                     </div>
                 </div>
             {/if}
