@@ -1,5 +1,6 @@
 <script lang="ts">
     import Flag from "@lucide/svelte/icons/flag";
+    import Hammer from "@lucide/svelte/icons/hammer";
     import Octagon from "@lucide/svelte/icons/octagon";
     import Pause from "@lucide/svelte/icons/pause";
     import Play from "@lucide/svelte/icons/play";
@@ -11,7 +12,7 @@
 
     function start() {
         if (!StageState.sb3) {
-            alert("No compiled code found... \nCompiling for you... \nPlease run 'compile' next time.")
+            alert("No compiled code found... \nCompiling for you... \nPlease hit the hammer to compile next time.")
             compile();
         }
 
@@ -52,5 +53,8 @@
     </button>
     <button onclick={stop} title="Stop">
         <Octagon size=16/>
+    </button>
+    <button onclick={compile} title="Compile" class="compile">
+        <Hammer size=16/>
     </button>
 </div>

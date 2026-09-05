@@ -29,24 +29,34 @@ div.topbar {
         border-radius: var(--radius-main);
     }
 
-    > div > button, a {
+    > div.r {
+        gap: var(--padding-min);
+        padding-right: var(--padding-min);
+    }
+
+    > div > button, > div > a {
         display: flex;
         align-items: center;
-        gap: var(--padding-main);
+        justify-content: center;
+        gap: var(--padding-min);
 
-        background-color: var(--bg-main);
-        color: var(--text-main);
+        min-width: 2rem;
+        height: 2rem;
+        padding: 0 var(--padding-min);
         font-family: var(--font);
         font-size: 0.9rem;
-        padding: var(--padding-main) var(--padding-large);
+        text-decoration: none;
 
-        border: var(--border-main) solid 1px;
-        border-radius: var(--radius-main);
+        background-color: transparent;
+        color: var(--text-main);
+
+        border: none;
+        border-radius: var(--radius-min);
         cursor: pointer;
     }
 
-    > div > button:hover, a:hover {
-        border-color: var(--border-highlight);
+    > div > button:hover, > div > a:hover {
+        background-color: var(--bg-light);
         color: var(--text-highlight);
     }
 }

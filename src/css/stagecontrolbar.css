@@ -28,6 +28,10 @@ div.stagecontrolbar {
         cursor: pointer;
     }
 
+    > button.compile {
+        margin-left: auto;
+    }
+
     > button:hover {
         background-color: var(--bg-light);
     }
