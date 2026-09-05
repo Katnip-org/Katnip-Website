@@ -1,15 +1,24 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { cancelCreate, CodeEditorState, openContextMenu, ProjectContent } from "../../ts/state.svelte";
-    import type { FilesystemDirectory, FilesystemEntry } from "../../ts/types";
+    import { cancelCreate, cancelRename, CodeEditorState, openContextMenu, ProjectContent, renameEntry } from "../../ts/state.svelte";
+    import { COSTUME_FORMATS, SOUND_FORMATS, type FilesystemDirectory, type FilesystemEntry } from "../../ts/types";
     import FSEntry from "./FSEntry.svelte";
     import ChevronDown from "@lucide/svelte/icons/chevron-down";
     import ChevronRight from "@lucide/svelte/icons/chevron-right";
-    import FileIcon from "@lucide/svelte/icons/file"
+    import FileIcon from "@lucide/svelte/icons/file";
+    import ImageIcon from "@lucide/svelte/icons/image";
+    import MusicIcon from "@lucide/svelte/icons/music";
 
     let { entry, parent, open = false, nested }: { entry: FilesystemEntry, parent?: FilesystemDirectory, open?: boolean, nested: number } = $props();
 
     let self: HTMLDivElement;
+
+    const ext = $derived(entry.name.split(".").pop()?.toLowerCase() ?? "");
+    const Icon = $derived(
+        (COSTUME_FORMATS as readonly string[]).includes(ext) ? ImageIcon
+        : (SOUND_FORMATS as readonly string[]).includes(ext) ? MusicIcon
+        : FileIcon
+    );
 
     $effect(() => {
         if (CodeEditorState.createEntryPath === entry.path) open = true;
@@ -62,6 +71,14 @@
         cancelCreate();
     }
 
+    function renameKeyEv(ev: KeyboardEvent) {
+        if (ev.key === "Escape") return cancelRename();
+        if (ev.key !== "Enter") return;
+        ev.preventDefault();
+        if (parent) renameEntry(entry, parent, CodeEditorState.renameEntryName ?? "");
+        cancelRename();
+    }
+
     function contextMenu(ev: MouseEvent) {
         ev.preventDefault();
         // Keep this from reaching the window handler that closes the menu.
@@ -74,9 +91,19 @@
 <div class={"entry" + (CodeEditorState.focusedEntry === entry.path && entry.path !== "/" ? " focused" : "")}>
     <div class="info" bind:this={self} oncontextmenu={contextMenu} role="presentation" style={`margin-left: ${nested * 4}px`}>
         {#if entry.type === "file"}
-            <FileIcon size={14} color="var(--text-gray)" />
+            <Icon size={14} color="var(--text-gray)" />
         {/if}
-        <p>{entry.name}</p>
+        {#if CodeEditorState.renameEntryPath === entry.path}
+            <input
+                bind:value={CodeEditorState.renameEntryName}
+                onkeydown={renameKeyEv}
+                onblur={cancelRename}
+                onclick={(e) => e.stopPropagation()}
+                {@attach (el) => { el.focus(); el.select(); }}
+            >
+        {:else}
+            <p title={entry.name}>{entry.name}</p>
+        {/if}
         {#if entry.type === "directory"}
             {#if open}
                 <ChevronDown size={12} class="collapse" />

@@ -5,6 +5,7 @@ import HtmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
 import TsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
 
 import { checkSource, type KatnipError } from "@katnip-org/compiler";
+import { compilerOptions } from "./compile";
 import * as monaco from "monaco-editor";
 
 import { THEME_RULES, themeScope } from "./theme";
@@ -85,9 +86,9 @@ self.MonacoEnvironment = {
 	}
 };
 
-export function UpdateDiagnostics(m: monaco.editor.ITextModel) {
+export function UpdateDiagnostics(m: monaco.editor.ITextModel, path: string) {
 	const version = m.getVersionId();
-	const errs = checkCode(m.getValue());
+	const errs = checkCode(m.getValue(), path);
 
 	if (m.getVersionId() !== version) return;
 
@@ -103,8 +104,8 @@ export function UpdateDiagnostics(m: monaco.editor.ITextModel) {
 	}));
 }
 
-function checkCode(code: string) {
-    const errors: readonly KatnipError[] = checkSource(code);
+function checkCode(code: string, path: string) {
+    const errors: readonly KatnipError[] = checkSource(code, compilerOptions(path));
     return errors;
 }
 

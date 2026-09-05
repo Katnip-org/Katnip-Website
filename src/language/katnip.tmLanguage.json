@@ -88,7 +88,7 @@
           "name": "keyword.control.katnip",
           "match": "\\b(if|elif|else|for|while|do|return|switch|case|default)\\b"
         },
-        { "name": "storage.type.katnip", "match": "\\b(proc|enum|sprite)\\b" },
+        { "name": "storage.type.katnip", "match": "\\b(proc|enum|sprite|stage)\\b" },
         { "name": "storage.modifier.katnip", "match": "\\b(private|public|temp)\\b" },
         { "name": "variable.language.self.katnip", "match": "\\bself\\b" }
       ]

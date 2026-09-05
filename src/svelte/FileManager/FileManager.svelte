@@ -2,13 +2,15 @@
     import ResizeHandle from "../ResizeHandle.svelte";
     import FilePlusCorner from "@lucide/svelte/icons/file-plus-corner";
     import FolderPlus from "@lucide/svelte/icons/folder-plus";
+    import Upload from "@lucide/svelte/icons/upload";
     import "../../css/filemanager.css";
     import { onMount } from "svelte";
-    import { beginCreate, CodeEditorState, Project } from "../../ts/state.svelte";
+    import { beginCreate, CodeEditorState, Project, uploadFile } from "../../ts/state.svelte";
     import FSEntry from "./FSEntry.svelte";
     import ContextManager from "./ContextManager.svelte";
 
     let fileManager: HTMLDivElement;
+    let uploadInput: HTMLInputElement;
     let focused: boolean = $state(false);
 
     onMount(() => {
@@ -33,6 +35,13 @@
 
         beginCreate(type, path);
     }
+
+    async function upload() {
+        for (const f of uploadInput.files ?? []) {
+            uploadFile(f.name, new Uint8Array(await f.arrayBuffer()));
+        }
+        uploadInput.value = "";
+    }
 </script>
 
 <div class="fileManager" bind:this={fileManager}>
@@ -46,6 +55,8 @@
                 <FilePlusCorner class="newFile" size=16 onclick={() => newEntry("file")} />
                 <FolderPlus class="newFolder" size=16 onclick={() => newEntry("directory")} />
             {/if}
+            <Upload class="upload" size=16 onclick={() => uploadInput.click()} />
+            <input type="file" multiple hidden bind:this={uploadInput} onchange={upload}>
         </div>
     </div>
     <ContextManager />

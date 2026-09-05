@@ -13,8 +13,9 @@ FSEntry opens it through the shared ContextMenu state rather than each row ownin
     import FilePlusCorner from "@lucide/svelte/icons/file-plus-corner";
     import FolderPlus from "@lucide/svelte/icons/folder-plus";
     import Trash2 from "@lucide/svelte/icons/trash-2";
+    import Pencil from "@lucide/svelte/icons/pencil";
 
-    import { beginCreate, closeContextMenu, CodeEditorState, ContextMenu } from "../../ts/state.svelte";
+    import { beginCreate, beginRename, closeContextMenu, CodeEditorState, ContextMenu } from "../../ts/state.svelte";
     import "../../css/contextmenu.css";
 
     let menu: HTMLElement | undefined = $state();
@@ -64,6 +65,9 @@ FSEntry opens it through the shared ContextMenu state rather than each row ownin
         </button>
         {#if ContextMenu.parent}
             <hr>
+            <button onclick={() => beginRename(ContextMenu.entry!)}>
+                <Pencil size={14} /> Rename
+            </button>
             <button class="danger" onclick={remove}>
                 <Trash2 size={14} /> Delete
             </button>

@@ -40,7 +40,7 @@
 
         editor.onDidChangeModelContent(() => {
             onChange(editor.getValue());
-            if (currentLanguage === "katnip") UpdateDiagnostics(mod);
+            if (currentLanguage === "katnip") UpdateDiagnostics(mod, filename);
         });
     });
 

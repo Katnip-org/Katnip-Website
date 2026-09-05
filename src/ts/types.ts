@@ -1,3 +1,6 @@
+export const COSTUME_FORMATS = ["svg", "png", "jpg", "jpeg", "bmp", "gif"] as const;
+export const SOUND_FORMATS = ["wav", "mp3"] as const;
+
 export interface ProjectConfig {
     name: string;
     files: FilesystemDirectory;
@@ -31,6 +34,9 @@ export interface EditorState {
     createEntryType: "file" | "directory" | null;
     createEntryName: string | null;
     createEntryPath: string | null;
+
+    renameEntryPath: string | null;
+    renameEntryName: string | null;
 }
 
 export interface ContextMenuState {

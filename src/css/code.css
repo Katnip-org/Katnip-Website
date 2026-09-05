@@ -13,4 +13,10 @@ div.codeArea {
     > div {
         height: 100%
     }
+
+    > p.binary {
+        margin: 0;
+        padding: var(--padding-large);
+        color: var(--text-gray);
+    }
 }

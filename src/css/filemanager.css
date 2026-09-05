@@ -10,6 +10,7 @@ div.fileManager {
 
     background-color: var(--bg-dark);
     border-right: var(--border-dark) solid 1px;
+    overflow: hidden;
 }
 
 div.options {
@@ -54,6 +55,13 @@ div.entry {
         > p {
             margin: 0;
             user-select: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        > svg {
+            flex-shrink: 0;
         }
 
         > input {
@@ -66,7 +74,7 @@ div.entry {
             padding: var(--padding-min);
         }
 
-        > svg.lucide-file {
+        > svg.lucide-file, > svg.lucide-image, > svg.lucide-music {
             width: 14px;
         }
     }
