@@ -1,6 +1,6 @@
-import { CodeEditorState, StageState } from "./state.svelte";
+import { CodeEditorState, findEntry, StageState, TerminalContent } from "./state.svelte";
 import { compilePath } from "./compile";
-import { TerminalContent } from "./state.svelte";
+import { settings } from "./settings.svelte";
 
 function prettifyDate(date: Date): string {
     return date.toLocaleTimeString("en-US", {
@@ -13,11 +13,20 @@ function prettifyDate(date: Date): string {
 }
 
 export function compile() {
-    const path = CodeEditorState.currentFile;
+    const main = settings().compilation === "main" && findEntry("/main.knip")?.entry.type === "file";
+    const path = main ? "/main.knip" : CodeEditorState.currentFile;
     if (path === null) return;
 
     const result = compilePath(path);
     if (!result) return;
+
+    if (!result) {
+        TerminalContent.push({
+            text: `Nothing to compile: ${path} is not a .knip file`,
+            kind: "error",
+        });
+        return;
+    }
 
     let timeString: string = prettifyDate(new Date());
     TerminalContent.push({ text: `-- Compile started at ${timeString} --`, kind: "log" });

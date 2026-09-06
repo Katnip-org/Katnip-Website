@@ -1,5 +1,6 @@
 import { compileToSb3, type AssetReader, type ImportResolver } from "@katnip-org/compiler";
 import { Project, ProjectContent } from "./state.svelte";
+import { settings } from "./settings.svelte";
 import type { FilesystemEntry, FilesystemFile } from "./types";
 
 function lookup(path: string): FilesystemFile | null {
@@ -38,7 +39,7 @@ const readAsset: AssetReader = (specifier, fromPath) => {
 
 /** Shared by the compile button and editor diagnostics so both see the same imports/assets. */
 export function compilerOptions(path: string) {
-    return { path, resolve, readAsset };
+    return { path, resolve, readAsset, compression: settings().compression };
 }
 
 export function compile(entry: FilesystemFile) {
