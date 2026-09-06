@@ -36,7 +36,7 @@ div.stagecontrolbar {
         background-color: var(--bg-light);
     }
 
-    > button[title="Play"]:hover {
+    > button[title="Compile (shift-click to play)"]:hover {
         background-color: color-mix(in srgb, var(--bg-light), #4caf50 30%);
     }
 
