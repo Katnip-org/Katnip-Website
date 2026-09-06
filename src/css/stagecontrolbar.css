@@ -28,11 +28,27 @@ div.stagecontrolbar {
         cursor: pointer;
     }
 
-    > button.compile {
+    > button.right {
         margin-left: auto;
     }
 
     > button:hover {
         background-color: var(--bg-light);
+    }
+
+    > button[title="Play"]:hover {
+        background-color: color-mix(in srgb, var(--bg-light), #4caf50 30%);
+    }
+
+    > button[title="Pause"]:hover {
+        background-color: color-mix(in srgb, var(--bg-light), #eaae2d 30%);
+    }
+
+    > button[title="Resume"]:hover {
+        background-color: color-mix(in srgb, var(--bg-light), #eaae2d 30%);
+    }
+
+    > button[title="Stop"]:hover {
+        background-color: color-mix(in srgb, var(--bg-light), #d62721 30%);
     }
 }

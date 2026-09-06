@@ -1,14 +1,19 @@
 <script lang="ts">
     import Flag from "@lucide/svelte/icons/flag";
-    import Hammer from "@lucide/svelte/icons/hammer";
     import Octagon from "@lucide/svelte/icons/octagon";
     import Pause from "@lucide/svelte/icons/pause";
     import Play from "@lucide/svelte/icons/play";
+    import Zap from "@lucide/svelte/icons/zap";
+    import Zap_Off from "@lucide/svelte/icons/zap-off";
     import { StageState } from "../../ts/state.svelte";
+    import { settings, setSetting } from "../../ts/settings.svelte";
     import { compile } from "../../ts/actions.svelte"
     import "../../css/stagecontrolbar.css";
 
     let paused = $state(false);
+    let turbo = $derived(settings().turboMode);
+
+    $effect(() => StageState.scaffolding?.vm.setTurboMode(turbo));
 
     function start() {
         if (!StageState.sb3) {
@@ -41,7 +46,7 @@
 </script>
 
 <div class="stagecontrolbar">
-    <button onclick={start} title="Play">
+    <button onclick={(e) => e.shiftKey ? start() : compile()} title="Compile (shift-click to play)">
         <Flag size=16/>
     </button>
     <button onclick={pause} title={paused ? "Resume" : "Pause"}>
@@ -54,7 +59,11 @@
     <button onclick={stop} title="Stop">
         <Octagon size=16/>
     </button>
-    <button onclick={compile} title="Compile" class="compile">
-        <Hammer size=16/>
+    <button onclick={() => setSetting("turboMode", !turbo)} title="TurboMode" class="right">
+        {#if turbo}
+            <Zap fill="#ffcc00" strokeWidth={0} size=14/>
+        {:else}
+            <Zap_Off size=14/>
+        {/if}
     </button>
 </div>

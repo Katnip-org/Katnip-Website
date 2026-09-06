@@ -92,9 +92,16 @@ ProjectContent[3] = `# Katnip compilation settings
 # "main" -> Search for a file named "main.knip", fallback to "open-editor"
 compilation = "open-editor" # enum: (open-editor, main)
 
+# Enable / Disable Turbo mode
+# True -> Enabled; everything runs as fast as possible
+# False -> Disabled; everything runs 'normally'
+turboMode = false # enum: (true, false)
 
 # --- Compiler Options ---
 
+# Decide what level of compression the internal ZIP'ing tool uses
+# 1..9 -> Lower = faster but bigger zip file; Higher = slower but smaller zip file
+compression = 6 # type: int[1..9]
 `;
 
 export const CodeEditorState: EditorState = $state({
