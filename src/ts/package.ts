@@ -1,5 +1,5 @@
 import { unzipSync, zipSync } from "fflate";
-import { bytesToContent, CodeEditorState, Project, ProjectContent } from "./state.svelte";
+import { bytesToContent, CodeEditorState, Project, ProjectContent, StageState } from "./state.svelte";
 import type { FilesystemDirectory, FilesystemEntry } from "./types";
 
 const EXT = ".kpkg";
@@ -23,6 +23,17 @@ export function exportProject() {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `${Project.name.trim() || "project"}${EXT}`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
+
+export function exportSB3() {
+    const data = StageState.sb3;
+    if (!data) return;
+    const blob = new Blob([data as BlobPart], { type: "application/zip" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${Project.name.trim() || "project"}.sb3`;
     a.click();
     URL.revokeObjectURL(a.href);
 }
