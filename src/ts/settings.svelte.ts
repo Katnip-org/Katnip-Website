@@ -6,6 +6,12 @@ const DEFAULTS = {
     compilation: "open-editor" as "open-editor" | "main",
     turboMode: false,
     compression: 6,
+    highQualityPen: false,
+    framerate: 30,
+    interpolation: false,
+    fencing: true,
+    miscLimits: true,
+    maxClones: 300,
 };
 export type Settings = typeof DEFAULTS;
 
@@ -40,6 +46,8 @@ export function settings(): Settings {
     }
     if (out.compilation !== "main") out.compilation = "open-editor";
     out.compression = Math.min(9, Math.max(1, out.compression));
+    out.framerate = Math.min(250, Math.max(1, out.framerate));
+    out.maxClones = Math.max(1, out.maxClones);
     return out;
 }
 

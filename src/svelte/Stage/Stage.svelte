@@ -1,5 +1,6 @@
 <script lang="ts">
     import { StageState } from "../../ts/state.svelte";
+    import { settings } from "../../ts/settings.svelte";
     import "../../css/stage.css";
 
     let stage: HTMLDivElement;
@@ -27,6 +28,17 @@
             observer.disconnect();
             StageState.scaffolding = null;
         };
+    });
+
+    $effect(() => {
+        const scaffolding = StageState.scaffolding;
+        if (!scaffolding) return;
+
+        const { highQualityPen, framerate, interpolation, fencing, miscLimits, maxClones } = settings();
+        scaffolding.renderer.setUseHighQualityRender(highQualityPen);
+        scaffolding.vm.setFramerate(framerate);
+        scaffolding.vm.setInterpolation(interpolation);
+        scaffolding.vm.setRuntimeOptions({ fencing, miscLimits, maxClones });
     });
 
     $effect(() => {

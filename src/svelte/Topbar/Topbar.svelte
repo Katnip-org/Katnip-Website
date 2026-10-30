@@ -70,6 +70,37 @@
                         <input type="number" min="1" max="9" value={current.compression}
                             onchange={(e) => setSetting("compression", +e.currentTarget.value)}>
                     </label>
+                    <hr />
+                    <label>
+                        <input type="checkbox" checked={current.highQualityPen}
+                            onchange={(e) => setSetting("highQualityPen", e.currentTarget.checked)}>
+                        High quality pen
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={current.interpolation}
+                            onchange={(e) => setSetting("interpolation", e.currentTarget.checked)}>
+                        Interpolation
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={current.fencing}
+                            onchange={(e) => setSetting("fencing", e.currentTarget.checked)}>
+                        Sprite fencing
+                    </label>
+                    <label>
+                        <input type="checkbox" checked={current.miscLimits}
+                            onchange={(e) => setSetting("miscLimits", e.currentTarget.checked)}>
+                        Misc limits
+                    </label>
+                    <label>
+                        Framerate
+                        <input type="number" min="1" max="250" value={current.framerate}
+                            onchange={(e) => setSetting("framerate", +e.currentTarget.value)}>
+                    </label>
+                    <label>
+                        Max clones
+                        <input type="number" min="1" value={current.maxClones}
+                            onchange={(e) => setSetting("maxClones", +e.currentTarget.value)}>
+                    </label>
                 </nav>
             {/if}
         </div>

@@ -115,11 +115,33 @@ compilation = "open-editor" # enum: (open-editor, main)
 # False -> Disabled; everything runs 'normally'
 turboMode = false # enum: (true, false)
 
+
 # --- Compiler Options ---
 
 # Decide what level of compression the internal ZIP'ing tool uses
 # 1..9 -> Lower = faster but bigger zip file; Higher = slower but smaller zip file
 compression = 6 # type: int[1..9]
+
+
+# --- Scaffolding Options ---
+
+# Draw pen lines at your screen's resolution instead of the stage's
+highQualityPen = false # enum: (true, false)
+
+# How many times per second scripts run
+framerate = 30 # type: int[1..250]
+
+# Smooth motion between frames
+interpolation = false # enum: (true, false)
+
+# Keep sprites from moving fully off the stage
+fencing = true # enum: (true, false)
+
+# Keep Scratch's limits on things like pen size, costume effects and simultaneous sounds
+miscLimits = true # enum: (true, false)
+
+# How many clones can exist at once
+maxClones = 300 # type: int[1..]
 `;
 ProjectContent[3] = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAUUlEQVR42u3WsQ0AIAgEQNZwXddxH9fRBaA0FlxCScJVz8fZM5818nm8H0BAQP1Anw5X+0BAQA1BkhoICEgf8jqAgPQhSQ0EBKQPeR1AQJ1BF4Vldg+3ULQhAAAAAElFTkSuQmCC"), c => c.charCodeAt(0));
 ProjectContent[4] = `{
