@@ -8,29 +8,49 @@ export const Project: ProjectConfig = $state({
         name: "/",
         path: "/",
         files: {
-            "hello.md": {
+            "readme.md": {
                 type: "file",
-                name: "hello.md",
-                path: "/hello.md",
+                name: "readme.md",
+                path: "/readme.md",
                 contentIdx: 0,
-            },
-            "thing.json": {
-                type: "file",
-                name: "thing.json",
-                path: "/thing.json",
-                contentIdx: 1,
             },
             "test.knip": {
                 type: "file",
                 name: "test.knip",
                 path: "/test.knip",
-                contentIdx: 2,
+                contentIdx: 1,
             },
             "settings.toml": {
                 type: "file",
                 name: "settings.toml",
                 path: "/settings.toml",
-                contentIdx: 3,
+                contentIdx: 2,
+            },
+            "assets": {
+                type: "directory",
+                name: "assets",
+                path: "/assets",
+                files: {
+                    "placeholder.png": {
+                        type: "file",
+                        name: "placeholder.png",
+                        path: "/assets/placeholder.png",
+                        contentIdx: 3,
+                    },
+                },
+            },
+            "data": {
+                type: "directory",
+                name: "data",
+                path: "/data",
+                files: {
+                    "config.json": {
+                        type: "file",
+                        name: "config.json",
+                        path: "/data/config.json",
+                        contentIdx: 4,
+                    },
+                },
             },
         },
     },
@@ -55,35 +75,33 @@ export function uploadFile(name: string, bytes: Uint8Array) {
     const contentIdx = ProjectContent.push(content) - 1;
     Project.files.files[name] = { type: "file", name, path: `/${name}`, contentIdx };
 }
-ProjectContent[0] = "## haiii :3";
-ProjectContent[1] = `{
-    "hello": "world",
-    "myArray": [
-        1,
-        "2",
-        null
-    ]
-}`
-ProjectContent[2] = `public score: num = 0;
+ProjectContent[0] = `This is a Katnip project.
+Edit test.knip and press the green flag to run it.
+`;
+ProjectContent[1] = `public score: num = 0;
 
 proc award(points: num) -> void {
     score += points;
 }
 
 sprite Cat {
+    costume "./assets/placeholder.png";
+
+    private config: dict<str, num> = import("./data/config.json");
+
     events.onFlag() {
         pen.down();
-        for (side, 4) {
-            motion.forward(100);
+        for (side, config["sides"]) {
+            motion.forward(config["length"]);
             motion.turn(90);
-            award(10);
+            award(config["points"]);
         }
         pen.up();
         looks.say(f"Scored {score}!", 2);
     }
 }
 `;
-ProjectContent[3] = `# Katnip compilation settings
+ProjectContent[2] = `# Katnip compilation settings
 
 # --- Web-Editor Options ---
 
@@ -103,10 +121,17 @@ turboMode = false # enum: (true, false)
 # 1..9 -> Lower = faster but bigger zip file; Higher = slower but smaller zip file
 compression = 6 # type: int[1..9]
 `;
+ProjectContent[3] = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAUUlEQVR42u3WsQ0AIAgEQNZwXddxH9fRBaA0FlxCScJVz8fZM5818nm8H0BAQP1Anw5X+0BAQA1BkhoICEgf8jqAgPQhSQ0EBKQPeR1AQJ1BF4Vldg+3ULQhAAAAAElFTkSuQmCC"), c => c.charCodeAt(0));
+ProjectContent[4] = `{
+    "sides": 4,
+    "length": 100,
+    "points": 10
+}
+`;
 
 export const CodeEditorState: EditorState = $state({
     currentFile: "/test.knip",
-    currentFileContent: 2,
+    currentFileContent: 1,
     focusedEntry: "/test.knip",
     focusedEntryType: "file",
     createEntryName: null,

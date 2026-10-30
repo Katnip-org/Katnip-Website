@@ -1,5 +1,6 @@
 <script lang="ts">
     import Flag from "@lucide/svelte/icons/flag";
+    import Maximize from "@lucide/svelte/icons/maximize";
     import Octagon from "@lucide/svelte/icons/octagon";
     import Pause from "@lucide/svelte/icons/pause";
     import Play from "@lucide/svelte/icons/play";
@@ -65,5 +66,8 @@
         {:else}
             <Zap_Off size=14/>
         {/if}
+    </button>
+    <button onclick={() => document.querySelector("div.stage")?.requestFullscreen()} title="Fullscreen (Esc to exit)">
+        <Maximize size=14/>
     </button>
 </div>
