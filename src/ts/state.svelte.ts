@@ -87,14 +87,16 @@ proc award(points: num) -> void {
 sprite Cat {
     costume "./assets/placeholder.png";
 
-    private config: dict<str, num> = import("./data/config.json");
+    private config: dict<str, str | num> = import("./data/config.json");
 
     events.onFlag() {
+        looks.say(Str(config["greeting"]), Num(config["greetingSeconds"]));
+
         pen.down();
-        for (side, config["sides"]) {
-            motion.forward(config["length"]);
+        for (side, 4) {
+            motion.forward(100);
             motion.turn(90);
-            award(config["points"]);
+            award(10);
         }
         pen.up();
         looks.say(f"Scored {score}!", 2);
@@ -145,9 +147,8 @@ maxClones = 300 # type: int[1..]
 `;
 ProjectContent[3] = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAUUlEQVR42u3WsQ0AIAgEQNZwXddxH9fRBaA0FlxCScJVz8fZM5818nm8H0BAQP1Anw5X+0BAQA1BkhoICEgf8jqAgPQhSQ0EBKQPeR1AQJ1BF4Vldg+3ULQhAAAAAElFTkSuQmCC"), c => c.charCodeAt(0));
 ProjectContent[4] = `{
-    "sides": 4,
-    "length": 100,
-    "points": 10
+    "greeting": "Hello from data/config.json!",
+    "greetingSeconds": 2
 }
 `;
 
