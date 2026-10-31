@@ -4,27 +4,43 @@
     import Upload from "@lucide/svelte/icons/upload";
     import File_Pen from "@lucide/svelte/icons/file-pen";
     import Cat from "@lucide/svelte/icons/cat";
+    import Plus from "@lucide/svelte/icons/plus";
     import Settings from "@lucide/svelte/icons/settings";
+    import Trash from "@lucide/svelte/icons/trash";
     import logo from "../../assets/logo.svg";
     import "../../css/topbar.css";
     import "../../css/contextmenu.css";
     import { Project } from "../../ts/state.svelte";
-    import { exportProject, exportSB3, importProject } from "../../ts/package";
+    import { exportProject, exportSB3 } from "../../ts/package";
+    import { deleteProject, importAsNewProject, isCurrent, listProjects, newProject, openProject, type SavedProject } from "../../ts/projects.svelte";
     import { settings, setSetting } from "../../ts/settings.svelte";
 
     let importInput: HTMLInputElement;
     let openMenu = $state<"file" | "settings" | null>(null);
     let current = $derived(settings());
+    let projects = $state.raw<SavedProject[]>([]);
+
+    async function refreshProjects() {
+        projects = await listProjects().catch(() => []);
+    }
 
     function toggle(menu: "file" | "settings", e: MouseEvent) {
         e.stopPropagation();
         openMenu = openMenu === menu ? null : menu;
+        if (openMenu === "file") refreshProjects();
     }
 
     async function onImport() {
         const f = importInput.files?.[0];
-        if (f) importProject(f.name, new Uint8Array(await f.arrayBuffer()));
+        if (f) await importAsNewProject(f.name, new Uint8Array(await f.arrayBuffer()));
         importInput.value = "";
+    }
+
+    async function onDelete(project: SavedProject, e: MouseEvent) {
+        e.stopPropagation();
+        if (!confirm(`Delete "${project.name}"? This can't be undone.`)) return;
+        await deleteProject(project.id);
+        await refreshProjects();
     }
 </script>
 
@@ -40,10 +56,24 @@
             </button>
             {#if openMenu === "file"}
                 <nav class="contextMenu">
+                    <button onclick={newProject}><Plus size={14} /> New</button>
                     <button onclick={() => importInput.click()}><Upload size={14} /> Import</button>
                     <button onclick={exportProject}><Download size={14} /> Export</button>
                     <hr />
                     <button onclick={exportSB3}><Cat size={14} /> SB3 Export</button>
+                    {#if projects.length > 0}
+                        <hr />
+                        <div class="projects">
+                            {#each projects as project (project.id)}
+                                <div class="project" class:current={isCurrent(project.id)}>
+                                    <button class="name" title={project.name} onclick={() => { if (!isCurrent(project.id)) openProject(project); }}>
+                                        {isCurrent(project.id) ? Project.name : project.name}
+                                    </button>
+                                    <button class="danger" title="Delete project" onclick={(e) => onDelete(project, e)}><Trash size={12} /></button>
+                                </div>
+                            {/each}
+                        </div>
+                    {/if}
                 </nav>
             {/if}
         </div>

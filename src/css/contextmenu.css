@@ -41,6 +41,31 @@ nav.contextMenu button.danger:hover {
     color: #fff;
 }
 
+nav.contextMenu div.projects {
+    max-height: 12rem;
+    overflow-y: auto;
+}
+
+nav.contextMenu div.project {
+    display: flex;
+    align-items: center;
+
+    > button.name {
+        display: block;
+        flex-grow: 1;
+        width: 0;
+        min-width: 8rem;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &.current > button.name {
+        color: var(--text-highlight);
+    }
+}
+
 nav.contextMenu hr {
     width: 100%;
     margin: var(--padding-min) 0;

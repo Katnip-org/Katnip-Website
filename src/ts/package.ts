@@ -16,10 +16,15 @@ function collect(entry: FilesystemEntry, out: Record<string, Uint8Array>) {
     for (const child of children) collect(child, out);
 }
 
-export function exportProject() {
+/** Every file in the project as zip entries. */
+export function snapshot() {
     const files: Record<string, Uint8Array> = {};
     collect(Project.files, files);
-    const blob = new Blob([zipSync(files)], { type: "application/zip" });
+    return files;
+}
+
+export function exportProject() {
+    const blob = new Blob([zipSync(snapshot())], { type: "application/zip" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `${Project.name.trim() || "project"}${EXT}`;
@@ -74,4 +79,6 @@ export function importProject(name: string, bytes: Uint8Array) {
     CodeEditorState.currentFileContent = null;
     CodeEditorState.focusedEntry = undefined;
     CodeEditorState.focusedEntryType = undefined;
+    StageState.scaffolding?.stopAll();
+    StageState.sb3 = null; // belongs to the previous project
 }
