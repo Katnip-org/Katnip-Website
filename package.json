@@ -19,6 +19,7 @@
     "typescript": "~6.0.2"
   },
   "dependencies": {
+    "@flufi/scsf": "npm:@jsr/flufi__scsf@^0.1.2",
     "@katnip-org/compiler": "latest",
     "@lucide/svelte": "^1.24.0",
     "@turbowarp/scaffolding": "0.4.0",

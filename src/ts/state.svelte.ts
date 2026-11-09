@@ -1,5 +1,12 @@
 import type { Scaffolding } from "@turbowarp/scaffolding";
-import type { ProjectConfig, EditorState, ContextMenuState, FilesystemEntry, FilesystemDirectory, TerminalLine } from "./types";
+import type {
+    ProjectConfig,
+    EditorState,
+    ContextMenuState,
+    FilesystemEntry,
+    FilesystemDirectory,
+    TerminalLine,
+} from "./types";
 
 export const Project: ProjectConfig = $state({
     name: "My Project",
@@ -14,10 +21,10 @@ export const Project: ProjectConfig = $state({
                 path: "/readme.md",
                 contentIdx: 0,
             },
-            "test.knip": {
+            "main.knip": {
                 type: "file",
-                name: "test.knip",
-                path: "/test.knip",
+                name: "main.knip",
+                path: "/main.knip",
                 contentIdx: 1,
             },
             "settings.toml": {
@@ -26,7 +33,7 @@ export const Project: ProjectConfig = $state({
                 path: "/settings.toml",
                 contentIdx: 2,
             },
-            "assets": {
+            assets: {
                 type: "directory",
                 name: "assets",
                 path: "/assets",
@@ -39,7 +46,7 @@ export const Project: ProjectConfig = $state({
                     },
                 },
             },
-            "data": {
+            data: {
                 type: "directory",
                 name: "data",
                 path: "/data",
@@ -60,7 +67,11 @@ export const ProjectContent: Array<string | Uint8Array> = $state([]);
 
 /** Bytes that are valid UTF-8 become text; anything else stays binary. */
 export function bytesToContent(bytes: Uint8Array): string | Uint8Array {
-    try { return new TextDecoder("utf-8", { fatal: true }).decode(bytes); } catch { return bytes; }
+    try {
+        return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    } catch {
+        return bytes;
+    }
 }
 
 /** Adds or replaces a file at the FS root. */
@@ -76,7 +87,7 @@ export function uploadFile(name: string, bytes: Uint8Array) {
     Project.files.files[name] = { type: "file", name, path: `/${name}`, contentIdx };
 }
 ProjectContent[0] = `This is a Katnip project.
-Edit test.knip and press the green flag to run it.
+Edit main.knip and press the green flag to run it.
 `;
 ProjectContent[1] = `public score: num = 0;
 
@@ -145,7 +156,12 @@ miscLimits = true # enum: (true, false)
 # How many clones can exist at once
 maxClones = 300 # type: int[1..]
 `;
-ProjectContent[3] = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAUUlEQVR42u3WsQ0AIAgEQNZwXddxH9fRBaA0FlxCScJVz8fZM5818nm8H0BAQP1Anw5X+0BAQA1BkhoICEgf8jqAgPQhSQ0EBKQPeR1AQJ1BF4Vldg+3ULQhAAAAAElFTkSuQmCC"), c => c.charCodeAt(0));
+ProjectContent[3] = Uint8Array.from(
+    atob(
+        "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAUUlEQVR42u3WsQ0AIAgEQNZwXddxH9fRBaA0FlxCScJVz8fZM5818nm8H0BAQP1Anw5X+0BAQA1BkhoICEgf8jqAgPQhSQ0EBKQPeR1AQJ1BF4Vldg+3ULQhAAAAAElFTkSuQmCC",
+    ),
+    c => c.charCodeAt(0),
+);
 ProjectContent[4] = `{
     "greeting": "Hello from data/config.json!",
     "greetingSeconds": 2
@@ -153,23 +169,23 @@ ProjectContent[4] = `{
 `;
 
 export const CodeEditorState: EditorState = $state({
-    currentFile: "/test.knip",
+    currentFile: "/main.knip",
     currentFileContent: 1,
-    focusedEntry: "/test.knip",
+    focusedEntry: "/main.knip",
     focusedEntryType: "file",
     createEntryName: null,
     createEntryType: null,
     createEntryPath: null,
     renameEntryPath: null,
     renameEntryName: null,
-    reveal: null
+    reveal: null,
 });
 
 export const ContextMenu: ContextMenuState = $state({
     x: 0,
     y: 0,
     entry: null,
-    parent: null
+    parent: null,
 });
 
 export function openContextMenu(x: number, y: number, entry: FilesystemEntry, parent: FilesystemDirectory | null) {
@@ -218,7 +234,7 @@ export function renameEntry(entry: FilesystemEntry, parent: FilesystemDirectory,
 
     // Rebuild instead of delete+add so the entry keeps its position.
     parent.files = Object.fromEntries(
-        Object.entries(parent.files).map(([k, v]) => k === entry.name ? [name, v] : [k, v])
+        Object.entries(parent.files).map(([k, v]) => (k === entry.name ? [name, v] : [k, v])),
     );
     entry = parent.files[name];
     entry.name = name;

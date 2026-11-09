@@ -4,6 +4,7 @@
     import Upload from "@lucide/svelte/icons/upload";
     import File_Pen from "@lucide/svelte/icons/file-pen";
     import Cat from "@lucide/svelte/icons/cat";
+    import Binary from "@lucide/svelte/icons/binary";
     import Plus from "@lucide/svelte/icons/plus";
     import Settings from "@lucide/svelte/icons/settings";
     import Trash from "@lucide/svelte/icons/trash";
@@ -11,7 +12,7 @@
     import "../../css/topbar.css";
     import "../../css/contextmenu.css";
     import { Project } from "../../ts/state.svelte";
-    import { exportProject, exportSB3 } from "../../ts/package";
+    import { exportProject, exportSB3, exportSCSF } from "../../ts/package";
     import { deleteProject, importAsNewProject, isCurrent, listProjects, newProject, openProject, type SavedProject } from "../../ts/projects.svelte";
     import { settings, setSetting } from "../../ts/settings.svelte";
 
@@ -61,6 +62,7 @@
                     <button onclick={exportProject}><Download size={14} /> Export</button>
                     <hr />
                     <button onclick={exportSB3}><Cat size={14} /> SB3 Export</button>
+                    <button onclick={exportSCSF}><Binary size={14} /> SCSF Binary Export</button>
                     {#if projects.length > 0}
                         <hr />
                         <div class="projects">
